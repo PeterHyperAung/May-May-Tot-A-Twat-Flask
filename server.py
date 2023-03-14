@@ -8,8 +8,19 @@ from flask_cors import CORS
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from smtplib import SMTP
+from random import randint
+
 
 confirmation_codes = {}
+
+app = Flask(__name__)
+api = Api(app)
+CORS(app)
+app.config['SECRET_KEY'] = "asuperdupersecret!"
+
+cluster = MongoClient("mongodb+srv://aviothicedu:hello@cluster0.lrdndgl.mongodb.net/?retryWrites=true&w=majority")
+db = cluster["may"]
+collection = db["users"]
 
 def send_confirmation_code(firstname,lastname,email,password,dob,role):
 
@@ -208,14 +219,7 @@ def send_info_doctor(name,address,speciality,datentime,phone):
     # Close the connection
     smtp_conn.quit()
 
-app = Flask(__name__)
-api = Api(app)
-CORS(app)
-app.config['SECRET_KEY'] = "asuperdupersecret!"
 
-cluster = MongoClient("mongodb+srv://aviothicedu:hello@cluster0.lrdndgl.mongodb.net/?retryWrites=true&w=majority")
-db = cluster["may"]
-collection = db["users"]
 
 def token_required(f):
     @wraps(f)
